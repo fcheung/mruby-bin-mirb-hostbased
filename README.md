@@ -28,6 +28,8 @@ Add below line in host Build setting of build_config.rb in mruby's source tree.
 conf.gem :github => 'kyab/mruby-bin-mirb-hostbased', :branch => 'master'
 ```
 
+To enable readline support, add `ENABLE_READLINE` to the list of defines (cc.defines)
+
 ## Target side:
 If your board is Arduino compatible, compile and upload sample sketch file in samples/target by your IDE(Arduino IDE, MPIDE,etc).
 I also recommend you to use my [mruby-arduino](https://github.com/kyab/mruby-arduino).
