@@ -18,6 +18,8 @@ Sample sketch for chipKIT Max32 (and maybe for Arduino Due) is in samples/target
 
 ![Hostbased mirb](https://cacoo.com/diagrams/EmmKpYRK6YEvRwcE-44F09.png)
 
+Another sample target implementation is at https://github.com/fcheung/mruby-mirb-server.git
+
 # Build
 ## Host side:
 Add below line in host Build setting of build_config.rb in mruby's source tree.
@@ -33,6 +35,15 @@ I also recommend you to use my [mruby-arduino](https://github.com/kyab/mruby-ard
 ```
 conf.gem :github => "kyab/mruby-arduino.git", :branch => "master"
 ```
+
+alternatively add
+
+```
+conf.gem :github => "fcheung/mruby-mirb-server.git", :branch => "master"
+```
+
+and then evaluate Mirb.run on the target
+
 
 # Usage
 ```
