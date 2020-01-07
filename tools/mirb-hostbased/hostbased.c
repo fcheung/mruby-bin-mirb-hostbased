@@ -227,11 +227,10 @@ mirb_reconnect(const char *port, int *fd)
   return 0;
 }
 
-int mirb_hostbased_command(char *ruby_code, char *last_code_line, size_t max_length, int fd_port, const char *port) {
-    if ((strncmp(last_code_line,"#file",strlen("#file")) == 0) || 
+mirb_command_status mirb_hostbased_command(char *ruby_code, char *last_code_line, size_t max_length, int fd_port, const char *port) {
+  if ((strncmp(last_code_line,"#file",strlen("#file")) == 0) || 
             (strncmp(last_code_line,"#load",strlen("#load")) == 0)){
     char *filename = last_code_line + strlen("#file");
-
     //strip space
     while(filename[0] == ' ' || filename[0] == '\t' || filename[0] == '"'){
       filename++;
@@ -244,7 +243,7 @@ int mirb_hostbased_command(char *ruby_code, char *last_code_line, size_t max_len
     FILE *f = fopen(filename, "r");
     if (!f){
       printf("cannot open file:%s\n",filename);
-      return 1;
+      return HOSTBASED_HANDLED;
     }
     char line[1024];
     while(fgets(line, 1024, f) != NULL){
@@ -283,6 +282,7 @@ int mirb_hostbased_command(char *ruby_code, char *last_code_line, size_t max_len
       }
       break;
     }
+    return HOSTBASED_REREAD;
   }else if (strncmp(last_code_line,"#reconnect",strlen("#reconnect")) == 0){
     close(fd_port);
     printf("reconnecting to %s...", port);
@@ -298,7 +298,7 @@ int mirb_hostbased_command(char *ruby_code, char *last_code_line, size_t max_len
 
     if (SIG_ERR == signal(SIGINT, sigint_handler)){
       printf("failed to set signal handler");
-      return 1;
+      return HOSTBASED_HANDLED;
     }
 
     while(g_continue_view){
@@ -312,7 +312,7 @@ int mirb_hostbased_command(char *ruby_code, char *last_code_line, size_t max_len
       }else{    //need strick check. currently assume EAGAIN or EWOULDBLOCK
         if ((errno != EAGAIN) && (errno != EWOULDBLOCK)){
           printf("oops, something bad happen");
-          return 1;
+          return HOSTBASED_HANDLED;
         }
       }
     }
@@ -322,9 +322,9 @@ int mirb_hostbased_command(char *ruby_code, char *last_code_line, size_t max_len
     ruby_code[0] = '\0';
     last_code_line[0] = '\0';
   } else {
-    return 0;
+    return HOSTBASED_UNHANDLED;
   }
-  return 1;
+  return HOSTBASED_HANDLED;
 }
 
 

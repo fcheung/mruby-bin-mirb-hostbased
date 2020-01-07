@@ -619,18 +619,19 @@ main(int argc, char **argv)
         break;
       }
       if (!code_block_open) {
-        if(mirb_hostbased_command(ruby_code, last_code_line, sizeof(ruby_code), fd_port, args.port)){
+        int status = mirb_hostbased_command(ruby_code, last_code_line, sizeof(ruby_code), fd_port, args.port);
+        if(status == HOSTBASED_HANDLED){
           continue;
         }
-        else {
+        else if(status == HOSTBASED_UNHANDLED){
           strcpy(ruby_code, last_code_line);
         }
+        //else we have modified rubycode & execution should conditune
       }
       else {
         strcpy(ruby_code, last_code_line);
       }
     }
-
     utf8 = mrb_utf8_from_locale(ruby_code, -1);
     if (!utf8) abort();
 
