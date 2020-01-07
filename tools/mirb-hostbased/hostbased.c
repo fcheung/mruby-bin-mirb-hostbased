@@ -237,7 +237,7 @@ int mirb_hostbased_command(char *ruby_code, char *last_code_line, size_t max_len
       filename++;
     }
     while(filename[strlen(filename)-1] == ' ' || filename[strlen(filename)-1] == '\t' ||
-          filename[strlen(filename)-1] == '"'){
+          filename[strlen(filename)-1] == '"' || filename[strlen(filename)-1] == '\n'){
       filename[strlen(filename)-1] = '\0';
     }
 
